@@ -40,20 +40,6 @@ export default function HeroBackground() {
       return min + Math.random() * (max - min);
     };
 
-    const isInsideTextZone = (x: number, y: number) => {
-      const xMin = width * 0.2;
-      const xMax = width * 0.8;
-      const yMin = height * 0.3;
-      const yMax = height * 0.7;
-
-      return (
-        x > xMin &&
-        x < xMax &&
-        y > yMin &&
-        y < yMax
-      );
-    };
-
     const createDot = (): Dot => {
       const isLeftSide = Math.random() < 0.5;
 

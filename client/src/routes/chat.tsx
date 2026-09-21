@@ -59,8 +59,7 @@ export default function ChatPage() {
     );
 
     return (
-        <div className="flex min-h-screen flex-col bg-background px-4 py-6">
-            {/* Top navigation */}
+        <div className="min-h-screen bg-background px-4 py-6">            {/* Top navigation */}
             <div className="mx-auto flex w-full max-w-lg items-center justify-between pb-4">
                 <Link
                     to="/"
@@ -79,9 +78,9 @@ export default function ChatPage() {
             </div>
 
             {/* Chat card */}
-<div className="mx-auto w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-sm">                <h1 className="text-xl font-bold text-card-foreground">
-                    WebSocket Chat
-                </h1>
+            <div className="mx-auto w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-sm">                <h1 className="text-xl font-bold text-card-foreground">
+                WebSocket Chat
+            </h1>
 
                 {/* Connection status */}
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -156,14 +155,14 @@ export default function ChatPage() {
                                 <div
                                     key={index}
                                     className={`flex ${isOwnMessage
-                                            ? "justify-end"
-                                            : "justify-start"
+                                        ? "justify-end"
+                                        : "justify-start"
                                         }`}
                                 >
                                     <div
                                         className={`max-w-[75%] rounded-md px-3 py-1.5 text-sm ${isOwnMessage
-                                                ? "bg-primary text-primary-foreground"
-                                                : "bg-muted text-foreground"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-muted text-foreground"
                                             }`}
                                     >
                                         {message.payload.message}
