@@ -43,6 +43,16 @@ export default function ChatPage() {
     setDraft("");
   };
 
+  // Get all room_users events
+  const roomUsersMessages = messages.filter(
+    (message) => message.type === "room_users"
+  );
+
+  // Get the latest user count
+  const roomUsersCount =
+    roomUsersMessages.at(-1)?.payload.count ?? 0;
+
+  // Only display chat messages
   const chatMessages = messages.filter(
     (message) => message.type === "chat"
   );
@@ -108,14 +118,23 @@ export default function ChatPage() {
           </button>
         </div>
 
-        {/* Current room */}
+        {/* Current room + user count */}
         {joinedRoom && (
-          <p className="mt-2 text-sm text-muted-foreground">
-            In room:{" "}
-            <span className="font-medium text-foreground">
-              {joinedRoom}
-            </span>
-          </p>
+          <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
+            <p>
+              In room:{" "}
+              <span className="font-medium text-foreground">
+                {joinedRoom}
+              </span>
+            </p>
+
+            <p>
+              Users:{" "}
+              <span className="font-medium text-foreground">
+                {roomUsersCount}
+              </span>
+            </p>
+          </div>
         )}
 
         {/* Messages */}

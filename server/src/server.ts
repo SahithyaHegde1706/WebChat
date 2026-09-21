@@ -52,6 +52,25 @@ function broadcast(roomId: string, message: ServerChatMessage) {
   }
 }
 
+function broadcastRoomUsers(roomId: string) {
+  const clients = rooms.get(roomId);
+
+  if (!clients) return;
+
+  const data = JSON.stringify({
+    type: "room_users",
+    payload: {
+      count: clients.size,
+    },
+  });
+
+  for (const client of clients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  }
+}
+
 wss.on("connection", (socket) => {
   const userId = generateUserId();
 
@@ -100,6 +119,8 @@ wss.on("connection", (socket) => {
 
       socketRooms.set(socket, roomId);
 
+      broadcastRoomUsers(roomId);
+
       console.log(`${userId} joined room ${roomId}`);
     }
 
@@ -130,6 +151,8 @@ wss.on("connection", (socket) => {
 
       if (clients?.size === 0) {
         rooms.delete(roomId);
+      } else {
+        broadcastRoomUsers(roomId);
       }
 
       socketRooms.delete(socket);

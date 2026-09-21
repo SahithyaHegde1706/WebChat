@@ -8,18 +8,24 @@ type SocketStatus =
 
 export type SocketMessage =
   | {
-      type: "welcome";
-      payload: {
-        userId: string;
-      };
-    }
-  | {
-      type: "chat";
-      payload: {
-        message: string;
-        senderId: string;
-      };
+    type: "welcome";
+    payload: {
+      userId: string;
     };
+  }
+  | {
+    type: "room_users";
+    payload: {
+      count: number;
+    };
+  }
+  | {
+    type: "chat";
+    payload: {
+      message: string;
+      senderId: string;
+    };
+  };
 
 export function useSocket(url: string) {
   const socketRef = useRef<WebSocket | null>(null);
@@ -49,6 +55,15 @@ export function useSocket(url: string) {
 
         if (data.type === "welcome") {
           setUserId(data.payload.userId);
+          return;
+        }
+
+        if (data.type === "room_users") {
+          setMessages((prev) => [
+            ...prev,
+            data,
+          ]);
+
           return;
         }
 
