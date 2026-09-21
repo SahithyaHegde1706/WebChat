@@ -66,7 +66,7 @@ function Footer() {
             <p className="text-sm text-muted-foreground">
                 Built by{" "}
                 <span className="font-medium text-foreground">
-                    Sahithya
+                    Sahithya Hegde
                 </span>
             </p>
         </footer>
