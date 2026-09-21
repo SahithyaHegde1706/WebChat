@@ -5,7 +5,7 @@ import { useSocket } from "../hooks/useSocket";
 const WS_URL = "ws://localhost:8081";
 
 export default function ChatPage() {
-  const { status, messages, send } = useSocket(WS_URL);
+  const { status, messages, send, userId } = useSocket(WS_URL);
 
   const [roomInput, setRoomInput] = useState("");
   const [joinedRoom, setJoinedRoom] = useState<string | null>(null);
@@ -125,16 +125,31 @@ export default function ChatPage() {
               No messages yet. Join a room and send one.
             </p>
           ) : (
-            chatMessages.map((message, index) => (
-              <div
-                key={index}
-                className="self-start rounded-md bg-muted px-3 py-1.5 text-sm text-foreground"
-              >
-                {typeof message.payload.message === "string"
-                  ? message.payload.message
-                  : ""}
-              </div>
-            ))
+            chatMessages.map((message, index) => {
+              const isOwnMessage =
+                message.payload.senderId === userId;
+
+              return (
+                <div
+                  key={index}
+                  className={`flex ${
+                    isOwnMessage
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[75%] rounded-md px-3 py-1.5 text-sm ${
+                      isOwnMessage
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-foreground"
+                    }`}
+                  >
+                    {message.payload.message}
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
 

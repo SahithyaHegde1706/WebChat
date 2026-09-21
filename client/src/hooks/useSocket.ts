@@ -1,20 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 
-type SocketStatus = "connecting" | "open" | "closed" | "error";
+type SocketStatus =
+  | "connecting"
+  | "open"
+  | "closed"
+  | "error";
 
-export interface SocketMessage {
-  type: string;
-  payload: {
-    [key: string]: unknown;
-  };
-}
+export type SocketMessage =
+  | {
+      type: "welcome";
+      payload: {
+        userId: string;
+      };
+    }
+  | {
+      type: "chat";
+      payload: {
+        message: string;
+        senderId: string;
+      };
+    };
 
 export function useSocket(url: string) {
   const socketRef = useRef<WebSocket | null>(null);
 
-  const [status, setStatus] = useState<SocketStatus>("connecting");
+  const [status, setStatus] =
+    useState<SocketStatus>("connecting");
 
-  const [messages, setMessages] = useState<SocketMessage[]>([]);
+  const [messages, setMessages] =
+    useState<SocketMessage[]>([]);
+
+  const [userId, setUserId] =
+    useState<string | null>(null);
 
   useEffect(() => {
     const socket = new WebSocket(url);
@@ -27,16 +44,30 @@ export function useSocket(url: string) {
 
     socket.onmessage = (event) => {
       try {
-        const data: SocketMessage = JSON.parse(event.data);
+        const data: SocketMessage =
+          JSON.parse(event.data);
 
-        setMessages((prev) => [...prev, data]);
+        if (data.type === "welcome") {
+          setUserId(data.payload.userId);
+          return;
+        }
+
+        if (data.type === "chat") {
+          setMessages((prev) => [
+            ...prev,
+            data,
+          ]);
+        }
       } catch {
-        console.error("Received invalid JSON message");
+        console.error(
+          "Received invalid JSON message"
+        );
       }
     };
 
     socket.onclose = () => {
       setStatus("closed");
+      setUserId(null);
     };
 
     socket.onerror = () => {
@@ -48,9 +79,14 @@ export function useSocket(url: string) {
     };
   }, [url]);
 
-  const send = (obj: SocketMessage) => {
-    if (socketRef.current?.readyState === WebSocket.OPEN) {
-      socketRef.current.send(JSON.stringify(obj));
+  const send = (obj: object) => {
+    if (
+      socketRef.current?.readyState ===
+      WebSocket.OPEN
+    ) {
+      socketRef.current.send(
+        JSON.stringify(obj)
+      );
     }
   };
 
@@ -58,5 +94,6 @@ export function useSocket(url: string) {
     status,
     messages,
     send,
+    userId,
   };
 }

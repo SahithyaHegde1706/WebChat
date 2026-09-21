@@ -22,10 +22,23 @@ type ChatMessage = {
 
 type ClientMessage = JoinMessage | ChatMessage;
 
+type ServerChatMessage = {
+  type: "chat";
+  payload: {
+    message: string;
+    senderId: string;
+  };
+};
+
 const rooms = new Map<string, Set<WebSocket>>();
 const socketRooms = new Map<WebSocket, string>();
+const socketUsers = new Map<WebSocket, string>();
 
-function broadcast(roomId: string, message: ChatMessage) {
+function generateUserId() {
+  return Math.random().toString(36).substring(2, 10);
+}
+
+function broadcast(roomId: string, message: ServerChatMessage) {
   const clients = rooms.get(roomId);
 
   if (!clients) return;
@@ -40,7 +53,20 @@ function broadcast(roomId: string, message: ChatMessage) {
 }
 
 wss.on("connection", (socket) => {
-  console.log("Client connected");
+  const userId = generateUserId();
+
+  socketUsers.set(socket, userId);
+
+  socket.send(
+    JSON.stringify({
+      type: "welcome",
+      payload: {
+        userId,
+      },
+    })
+  );
+
+  console.log(`Client connected: ${userId}`);
 
   socket.on("message", (raw) => {
     let message: ClientMessage;
@@ -74,18 +100,20 @@ wss.on("connection", (socket) => {
 
       socketRooms.set(socket, roomId);
 
-      console.log(`Client joined room ${roomId}`);
+      console.log(`${userId} joined room ${roomId}`);
     }
 
     if (message.type === "chat") {
       const roomId = socketRooms.get(socket);
+      const senderId = socketUsers.get(socket);
 
-      if (!roomId) return;
+      if (!roomId || !senderId) return;
 
       broadcast(roomId, {
         type: "chat",
         payload: {
           message: message.payload.message,
+          senderId,
         },
       });
     }
@@ -93,6 +121,7 @@ wss.on("connection", (socket) => {
 
   socket.on("close", () => {
     const roomId = socketRooms.get(socket);
+    const userId = socketUsers.get(socket);
 
     if (roomId) {
       const clients = rooms.get(roomId);
@@ -106,7 +135,9 @@ wss.on("connection", (socket) => {
       socketRooms.delete(socket);
     }
 
-    console.log("Client disconnected");
+    socketUsers.delete(socket);
+
+    console.log(`Client disconnected: ${userId}`);
   });
 });
 
