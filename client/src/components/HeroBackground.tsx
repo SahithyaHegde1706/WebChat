@@ -41,11 +41,20 @@ export default function HeroBackground() {
     };
 
     const createDot = (): Dot => {
-      const isLeftSide = Math.random() < 0.5;
+      const zone = Math.random();
 
-      const x = isLeftSide
-        ? random(20, width * 0.25)
-        : random(width * 0.75, width - 20);
+      let x: number;
+
+      if (zone < 0.4) {
+        // Left side
+        x = random(20, width * 0.28);
+      } else if (zone < 0.6) {
+        // Middle — keep particles subtle around the hero content
+        x = random(width * 0.72, width * 0.78);
+      } else {
+        // Right side
+        x = random(width * 0.78, width - 20);
+      }
 
       const y = random(0, height);
 
