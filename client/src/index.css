@@ -92,3 +92,40 @@ button:disabled {
 .status-error {
   color: #ef4444;
 }
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #475569;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.dark .theme-toggle {
+  border-color: #475569;
+  color: #cbd5e1;
+}
+
+.dark .theme-toggle:hover {
+  background: #1e293b;
+  color: white;
+}
