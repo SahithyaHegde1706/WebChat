@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useSocket } from "../hooks/useSocket";
 import ThemeToggle from "../components/ThemeToggle";
 
-const WS_URL = "ws://localhost:8081";
+const WS_URL =
+  import.meta.env.VITE_WS_URL || "ws://localhost:8081";
 
 export default function ChatPage() {
     const { status, messages, send, userId } = useSocket(WS_URL);
