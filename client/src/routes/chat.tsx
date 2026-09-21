@@ -79,8 +79,7 @@ export default function ChatPage() {
             </div>
 
             {/* Chat card */}
-            <div className="mx-auto w-full max-w-lg flex-1 rounded-xl border border-border bg-card p-6 shadow-sm">
-                <h1 className="text-xl font-bold text-card-foreground">
+<div className="mx-auto w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-sm">                <h1 className="text-xl font-bold text-card-foreground">
                     WebSocket Chat
                 </h1>
 
