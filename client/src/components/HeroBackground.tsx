@@ -55,16 +55,13 @@ export default function HeroBackground() {
     };
 
     const createDot = (): Dot => {
-      let x = random(0, width);
-      let y = random(0, height);
+      const isLeftSide = Math.random() < 0.5;
 
-      let attempts = 0;
+      const x = isLeftSide
+        ? random(20, width * 0.25)
+        : random(width * 0.75, width - 20);
 
-      while (isInsideTextZone(x, y) && attempts < 20) {
-        x = random(0, width);
-        y = random(0, height);
-        attempts++;
-      }
+      const y = random(0, height);
 
       return {
         x,
@@ -134,8 +131,8 @@ export default function HeroBackground() {
           Math.sin(
             time * 0.003 + dot.y * 0.01
           ) *
-            dot.sway *
-            8;
+          dot.sway *
+          8;
 
         ctx.beginPath();
 
@@ -162,7 +159,7 @@ export default function HeroBackground() {
           Math.sin(
             time * 0.002 + dot.y * 0.005
           ) *
-            0.03;
+          0.03;
 
         if (dot.y < -10) {
           dot.y = height + 10;
