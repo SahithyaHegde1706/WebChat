@@ -1,18 +1,5 @@
-/**
- * WebChatLogo
- *
- * Inline SVG logo component for WebChat.
- * Design: a clean, minimal rounded speech bubble with a subtle
- * "W" stroke mark inside — simple enough to read at 16 px,
- * polished enough for a navbar or product header.
- *
- * Uses `currentColor` so it inherits the surrounding text color in both
- * light and dark themes without any additional CSS.
- */
 interface WebChatLogoProps {
-  /** Width / height of the icon in pixels. Defaults to 24. */
   size?: number;
-  /** Optional extra class names applied to the <svg> element. */
   className?: string;
 }
 
